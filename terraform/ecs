@@ -1,0 +1,42 @@
+resource "aws_ecs_task_definition" "app" {
+  family                   = local.name
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+
+  cpu    = "256"
+  memory = "512"
+
+  execution_role_arn = aws_iam_role.ecs_execution.arn
+
+  container_definitions = jsonencode([
+    {
+      name  = "aws-devops-app"
+      image = "291761344414.dkr.ecr.ap-southeast-2.amazonaws.com/aws-devops-app:1.0"
+
+      essential = true
+
+      portMappings = [
+        {
+          containerPort = 5000
+          hostPort      = 5000
+          protocol      = "tcp"
+        }
+      ]
+
+      logConfiguration = {
+        logDriver = "awslogs"
+
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.app.name
+          "awslogs-region"        = var.aws_region
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
+    }
+  ])
+
+  tags = {
+    Name        = "${local.name}-task"
+    Environment = var.environment
+  }
+}
