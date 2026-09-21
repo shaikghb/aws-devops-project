@@ -6,6 +6,11 @@ resource "aws_ecs_service" "app" {
   desired_count = 1
   launch_type   = "FARGATE"
 
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
+
   network_configuration {
     subnets = [
       aws_subnet.public.id,
@@ -33,5 +38,10 @@ resource "aws_ecs_service" "app" {
   tags = {
     Name        = "${local.name}-service"
     Environment = var.environment
+  }
+  lifecycle {
+    ignore_changes = [
+      task_definition
+    ]
   }
 }

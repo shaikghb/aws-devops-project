@@ -60,7 +60,7 @@ resource "aws_iam_role" "github_actions" {
           }
 
           StringLike = {
-            "token.actions.githubusercontent.com:sub" = "repo:shaikghb/aws-devops-project:ref:refs/heads/main"
+            "token.actions.githubusercontent.com:sub" = "repo:shaikghb@319718934/aws-devops-project@1378025651:ref:refs/heads/main"
           }
         }
       }
@@ -80,6 +80,8 @@ resource "aws_iam_role_policy" "github_actions" {
     Version = "2012-10-17"
 
     Statement = [
+
+      # ECR authorization
       {
         Effect = "Allow"
 
@@ -90,6 +92,7 @@ resource "aws_iam_role_policy" "github_actions" {
         Resource = "*"
       },
 
+      # ECR push permissions
       {
         Effect = "Allow"
 
@@ -104,6 +107,7 @@ resource "aws_iam_role_policy" "github_actions" {
         Resource = "arn:aws:ecr:${var.aws_region}:291761344414:repository/aws-devops-app"
       },
 
+      # ECS deployment permissions
       {
         Effect = "Allow"
 
@@ -117,6 +121,23 @@ resource "aws_iam_role_policy" "github_actions" {
         ]
 
         Resource = "*"
+      },
+
+      # Allow GitHub Actions to pass the ECS execution role
+      {
+        Effect = "Allow"
+
+        Action = [
+          "iam:PassRole"
+        ]
+
+        Resource = aws_iam_role.ecs_execution.arn
+
+        Condition = {
+          StringEquals = {
+            "iam:PassedToService" = "ecs-tasks.amazonaws.com"
+          }
+        }
       }
     ]
   })
