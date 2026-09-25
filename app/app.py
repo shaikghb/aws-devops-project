@@ -10,7 +10,7 @@ def home():
 
 @app.route("/health")
 def health():
-    return "FAILED", 500
+    return "OK"
 
 
 if __name__ == "__main__":
