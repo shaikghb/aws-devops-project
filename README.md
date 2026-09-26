@@ -2,6 +2,8 @@
 
 A containerized Flask application deployed on AWS using Terraform, Amazon ECS Fargate, Amazon ECR, Application Load Balancer, GitHub Actions CI/CD, CloudWatch monitoring, auto-scaling, and deployment rollback.
 
+---
+
 ## Project Overview
 
 This project demonstrates an end-to-end DevOps workflow for deploying a Python Flask application to AWS.
@@ -42,9 +44,11 @@ Application Load Balancer
     |
     v
 Flask Application
+```
 
-Monitoring and Scaling
+### Monitoring and Scaling
 
+```text
 ECS / ALB / Application Logs
             |
             v
@@ -57,31 +61,47 @@ ECS / ALB / Application Logs
                  |
                  v
                 SNS
+```
 
-Technologies Used
-Application
-Python
-Flask
-Pytest
-Gunicorn
-Containerization
-Docker
-AWS
-Amazon VPC
-Amazon ECS Fargate
-Amazon ECR
-Application Load Balancer
-Amazon CloudWatch
-Amazon SNS
-IAM
-AWS Auto Scaling
-DevOps
-GitHub
-GitHub Actions
-GitHub OIDC
-Terraform
-Trivy
-Project Structure
+---
+
+## Technologies Used
+
+### Application
+
+- Python
+- Flask
+- Pytest
+- Gunicorn
+
+### Containerization
+
+- Docker
+
+### AWS
+
+- Amazon VPC
+- Amazon ECS Fargate
+- Amazon ECR
+- Application Load Balancer
+- Amazon CloudWatch
+- Amazon SNS
+- IAM
+- AWS Auto Scaling
+
+### DevOps
+
+- GitHub
+- GitHub Actions
+- GitHub OIDC
+- Terraform
+- Trivy
+
+---
+
+## Project Structure
+
+```text
 aws-devops-project/
 │
 ├── app/
@@ -109,90 +129,165 @@ aws-devops-project/
 ├── .dockerignore
 ├── .gitignore
 └── README.md
+```
 
-Application Endpoints
-Home
+---
+
+## Application Endpoints
+
+### Home Endpoint
+
+```text
 /
+```
 
 Response:
 
+```text
 AWS DevOps Project is running!
-Health Check
+```
+
+### Health Check Endpoint
+
+```text
 /health
+```
 
 Response:
 
+```text
 OK
+```
 
-The /health endpoint is used by the Application Load Balancer to determine whether the ECS task is healthy.
+The `/health` endpoint is used by the Application Load Balancer to determine whether the ECS task is healthy.
 
-Local Setup
-1. Clone the Repository
+---
+
+## Local Setup
+
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/shaikghb/aws-devops-project.git
 cd aws-devops-project
-2. Install Dependencies
+```
+
+### 2. Install Dependencies
+
+```bash
 py -m pip install -r app/requirements.txt
-3. Run Tests
+```
+
+### 3. Run Tests
+
+```bash
 py -m pytest -v
+```
 
 Expected result:
 
+```text
 2 passed
-4. Run the Application
+```
+
+### 4. Run the Application
+
+```bash
 py app/app.py
+```
 
 The application runs on:
 
+```text
 http://localhost:5000
+```
 
 Health check:
 
+```text
 http://localhost:5000/health
-Docker
-Build the Docker Image
+```
+
+---
+
+## Docker
+
+### Build the Docker Image
+
+```bash
 docker build -t aws-devops-app .
-Run the Container
+```
+
+### Run the Container
+
+```bash
 docker run -p 5000:5000 aws-devops-app
+```
 
 Open:
 
+```text
 http://localhost:5000
-Infrastructure with Terraform
+```
+
+---
+
+## Infrastructure with Terraform
 
 Terraform is used to create and manage the AWS infrastructure.
 
-Main infrastructure components include:
+### Main Infrastructure Components
 
-VPC
-Public subnets
-Internet Gateway
-Route tables
-Security groups
-ECS cluster
-ECS Fargate service
-ECS task definition
-Application Load Balancer
-Target group
-CloudWatch log group
-CloudWatch alarms
-CloudWatch dashboard
-SNS topic
-ECS auto-scaling
-Initialize Terraform
+- VPC
+- Public subnets
+- Internet Gateway
+- Route tables
+- Security groups
+- ECS cluster
+- ECS Fargate service
+- ECS task definition
+- Application Load Balancer
+- Target group
+- CloudWatch log group
+- CloudWatch alarms
+- CloudWatch dashboard
+- SNS topic
+- ECS auto-scaling
+
+### Initialize Terraform
+
+```bash
 cd terraform
 terraform init
-Validate Configuration
+```
+
+### Validate Configuration
+
+```bash
 terraform validate
-Review Changes
+```
+
+### Review Changes
+
+```bash
 terraform plan
-Apply Infrastructure
+```
+
+### Apply Infrastructure
+
+```bash
 terraform apply
-CI/CD Pipeline
+```
+
+---
+
+## CI/CD Pipeline
 
 GitHub Actions automates the application deployment process.
 
 The pipeline performs the following steps:
 
+```text
 Code Push
     |
     v
@@ -221,10 +316,13 @@ Deploy to ECS
     |
     v
 Application Load Balancer
+```
 
 This allows changes pushed to the repository to go through an automated deployment workflow.
 
-GitHub OIDC
+---
+
+## GitHub OIDC
 
 GitHub Actions uses OpenID Connect (OIDC) to authenticate with AWS.
 
@@ -232,109 +330,145 @@ This avoids storing long-term AWS access keys in the GitHub Actions workflow.
 
 The workflow obtains temporary AWS credentials through the configured IAM role.
 
-Amazon ECR
+---
+
+## Amazon ECR
 
 The Docker image is stored in Amazon Elastic Container Registry.
 
-ECR repository:
+### ECR Repository
 
+```text
 aws-devops-app
+```
 
 Images are tagged using the Git commit SHA so that deployments can be associated with a specific version of the source code.
 
-Amazon ECS Fargate
+---
+
+## Amazon ECS Fargate
 
 The application runs as a container on Amazon ECS using AWS Fargate.
 
 The ECS service is configured with:
 
-Desired count: 1
-CPU: 256
-Memory: 512 MiB
-Container port: 5000
-Health check path: /health
-Application Load Balancer
+- Desired count: 1
+- CPU: 256
+- Memory: 512 MiB
+- Container port: 5000
+- Health check path: `/health`
+
+---
+
+## Application Load Balancer
 
 The Application Load Balancer receives HTTP traffic and forwards requests to the ECS service.
 
 The target group uses:
 
+```text
 Port: 5000
 Protocol: HTTP
 Health Check: /health
+```
 
 The ECS security group allows application traffic from the Application Load Balancer security group.
 
-Auto Scaling
+---
+
+## Auto Scaling
 
 ECS service auto-scaling is configured using the average CPU utilization of the ECS service.
 
-Configuration:
+### Configuration
 
+```text
 Minimum tasks: 1
 Maximum tasks: 3
 Target CPU utilization: 70%
 Scale-out cooldown: 60 seconds
 Scale-in cooldown: 300 seconds
+```
 
 This allows the service to increase or decrease the number of running tasks based on CPU utilization.
 
-Monitoring
+---
+
+## Monitoring
 
 Amazon CloudWatch is used for monitoring the application and infrastructure.
 
 The CloudWatch dashboard contains metrics for:
 
-ECS CPU utilization
-ECS memory utilization
-ECS running task count
-ALB request count
-ALB target response time
-ALB unhealthy hosts
-Application Error Monitoring
+- ECS CPU utilization
+- ECS memory utilization
+- ECS running task count
+- ALB request count
+- ALB target response time
+- ALB unhealthy hosts
+
+---
+
+## Application Error Monitoring
 
 Application logs are stored in:
 
+```text
 /ecs/aws-devops-app-dev
+```
 
 A CloudWatch metric filter searches application logs for:
 
+```text
 ERROR
+```
 
-When an ERROR message is detected, CloudWatch records an application error metric.
+When an `ERROR` message is detected, CloudWatch records an application error metric.
 
-The CloudWatch alarm is configured with:
+### CloudWatch Alarm Configuration
 
+```text
 Threshold: 1
 Period: 60 seconds
 Statistic: Sum
+```
 
 The alarm sends notifications through the configured SNS topic.
 
-Error Monitoring Test
+### Error Monitoring Test
 
 The application error monitoring system was tested using a controlled log message:
 
+```text
 ERROR - controlled monitoring test
+```
 
 The test successfully caused the CloudWatch alarm to enter:
 
+```text
 ALARM
+```
 
 After removing the test log stream and allowing the metric period to expire, the alarm returned to:
 
+```text
 OK
+```
 
 This verified the application error monitoring flow.
 
-Deployment Rollback
+---
+
+## Deployment Rollback
 
 The ECS deployment circuit breaker is enabled with rollback.
 
-Configuration:
+### Configuration
 
+```text
 Deployment circuit breaker: Enabled
 Rollback: Enabled
+```
 
 A controlled deployment test was performed using an intentionally non-working application command.
 
@@ -342,66 +476,90 @@ The unhealthy deployment failed its ALB health checks, and ECS automatically rol
 
 This verified the deployment rollback mechanism.
 
-Security
+---
+
+## Security
 
 Security-related features implemented in the project include:
 
-GitHub OIDC authentication
-No long-term AWS access keys required by the CI/CD workflow
-Trivy container security scanning
-Non-root Docker container user
-ECS security group restricted to ALB traffic
-Testing
+- GitHub OIDC authentication
+- No long-term AWS access keys required by the CI/CD workflow
+- Trivy container security scanning
+- Non-root Docker container user
+- ECS security group restricted to ALB traffic
+
+---
+
+## Testing
 
 The project contains automated tests using Pytest.
 
-Current tests verify:
+### Current Tests
 
-Home endpoint returns HTTP 200
-Health endpoint returns HTTP 200
-Expected response messages are returned
+The tests verify:
+
+- Home endpoint returns HTTP 200
+- Health endpoint returns HTTP 200
+- Expected response messages are returned
 
 Run:
 
+```bash
 py -m pytest -v
+```
 
 Expected result:
 
+```text
 2 passed
-Deployment Verification
+```
+
+---
+
+## Deployment Verification
 
 The deployed application can be verified using the Application Load Balancer endpoint.
 
-Health endpoint:
+### Health Endpoint
 
+```text
 http://<ALB-DNS>/health
+```
 
 Expected response:
 
+```text
 OK
-Key DevOps Concepts Demonstrated
+```
+
+---
+
+## Key DevOps Concepts Demonstrated
 
 This project demonstrates practical implementation of:
 
-Infrastructure as Code
-Containerization
-CI/CD
-Cloud deployment
-GitHub Actions
-AWS OIDC
-Container registry
-ECS Fargate
-Load balancing
-Health checks
-Auto-scaling
-Monitoring
-Logging
-Alerting
-Security scanning
-Deployment rollback
-Infrastructure monitoring
-Author
+- Infrastructure as Code
+- Containerization
+- CI/CD
+- Cloud deployment
+- GitHub Actions
+- AWS OIDC
+- Container registry
+- ECS Fargate
+- Load balancing
+- Health checks
+- Auto-scaling
+- Monitoring
+- Logging
+- Alerting
+- Security scanning
+- Deployment rollback
+- Infrastructure monitoring
 
-Shaik Abzal Sharif
+---
+
+## Author
+
+**Shaik Abzal Sharif**
 
 DevOps Engineer
