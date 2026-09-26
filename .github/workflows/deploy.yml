@@ -14,7 +14,7 @@ env:
   ECR_REPOSITORY: aws-devops-app
   ECS_CLUSTER: aws-devops-app-dev-cluster
   ECS_SERVICE: aws-devops-app-dev-service
-  ECS_TASK_DEFINITION: aws-devops-app-dev
+  ECS_TASK_DEFINITION: aws-devops-app-dev:8
 
 jobs:
   deploy:
